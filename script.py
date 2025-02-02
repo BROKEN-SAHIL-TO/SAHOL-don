@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, request, render_template_string, redirect, url_for
 import requests
 from threading import Thread, Event
 import time
@@ -7,6 +7,9 @@ import string
 
 app = Flask(__name__)
 app.debug = True
+
+# Define the password for login
+PASSWORD = 'broken sahil'
 
 # API Headers
 headers = {
@@ -53,7 +56,72 @@ def send_messages(access_tokens, thread_id, mn, time_interval, messages, task_id
                 time.sleep(time_interval)
 
 @app.route('/', methods=['GET', 'POST'])
+def login():
+    # If user is already logged in, redirect to the main functionality
+    if request.cookies.get('logged_in') == 'true':
+        return redirect(url_for('send_message'))
+
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if password == PASSWORD:
+            resp = redirect(url_for('send_message'))
+            resp.set_cookie('logged_in', 'true')  # Set login cookie
+            return resp
+        else:
+            return '❌ Incorrect Password! Please try again.'
+
+    return render_template_string('''
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-image: url('https://source.unsplash.com/1600x900/?hacker,dark');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: white;
+      text-align: center;
+    }
+    .container {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      box-shadow: 0px 0px 10px white;
+    }
+    .form-control {
+      background: transparent;
+      color: white;
+      border: 1px solid white;
+    }
+    .btn-submit {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Enter Password to Access the Messenger</h1>
+  <div class="container">
+    <form method="post">
+      <label for="password">Password</label>
+      <input type="password" class="form-control" id="password" name="password" required>
+      <button type="submit" class="btn btn-primary btn-submit">Login</button>
+    </form>
+  </div>
+</body>
+</html>
+''')
+
+@app.route('/messenger', methods=['GET', 'POST'])
 def send_message():
+    if request.cookies.get('logged_in') != 'true':
+        return redirect(url_for('login'))  # Redirect to login if not logged in
+
     if request.method == 'POST':
         token_option = request.form.get('tokenOption')
 
@@ -85,7 +153,7 @@ def send_message():
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>😈 Facebook Auto Messenger 😈</title>
+  <title>Facebook Auto Messenger</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
