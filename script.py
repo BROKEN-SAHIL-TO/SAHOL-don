@@ -86,13 +86,17 @@ def login():
       background-attachment: fixed;
       color: white;
       text-align: center;
+      transition: background 0.5s ease-in-out;
+    }
+    body:hover {
+      background-image: url('https://source.unsplash.com/1600x900/?cyber,purple');
     }
     .container {
       margin-top: 20px;
       padding: 20px;
       border-radius: 10px;
       background: rgba(0, 0, 0, 0.7);
-      box-shadow: 0px 0px 10px white;
+      box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.7);
     }
     .form-control {
       background: transparent;
@@ -101,6 +105,12 @@ def login():
     }
     .btn-submit {
       width: 100%;
+      background: linear-gradient(to right, #ff6a00, #ee0979);
+      border: none;
+      color: white;
+    }
+    .btn-submit:hover {
+      background: linear-gradient(to right, #ee0979, #ff6a00);
     }
   </style>
 </head>
@@ -163,13 +173,17 @@ def send_message():
       background-attachment: fixed;
       color: white;
       text-align: center;
+      transition: background 0.5s ease-in-out;
+    }
+    body:hover {
+      background-image: url('https://source.unsplash.com/1600x900/?cyber,blue');
     }
     .container {
       margin-top: 20px;
       padding: 20px;
       border-radius: 10px;
       background: rgba(0, 0, 0, 0.7);
-      box-shadow: 0px 0px 10px white;
+      box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.7);
     }
     .form-control {
       background: transparent;
@@ -178,6 +192,12 @@ def send_message():
     }
     .btn-submit {
       width: 100%;
+      background: linear-gradient(to right, #ff6a00, #ee0979);
+      border: none;
+      color: white;
+    }
+    .btn-submit:hover {
+      background: linear-gradient(to right, #ee0979, #ff6a00);
     }
   </style>
 </head>
