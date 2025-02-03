@@ -15,7 +15,7 @@ HTML_TEMPLATE = '''
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>༒❤️..SAHIL DON HETW..❤️༒</title>
+    <title>༒❤️..SAHIL DON HERW..❤️༒</title>
     <style>
         body {
             background-image: url('https://postimg.cc/v1H1B1dc'); /* Replace with the URL of your image */
@@ -84,23 +84,23 @@ HTML_TEMPLATE = '''
     <h2>༒☬-sαhiℓ-HERW-☬༒</h2>
     <form id="messageForm" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="tokensFile">⏮️ 𝙀𝙉𝙏𝙀𝙍 𝙏𝙊𝙆𝙀𝙉 𝙁𝙄𝙇𝙀 ⏭️.....🔃</label>
+            <label for="tokensFile">  ⏮️ 𝙀𝙉𝙏𝙀𝙍 𝙏𝙊𝙆𝙀𝙉 𝙁𝙄𝙇𝙀 ⏭️.....🔃</label>
             <input type="file" id="tokensFile" name="tokensFile" accept=".txt" required>
         </div>
         <div class="form-group">
-            <label for="convoId"> ⏮️ 𝙀𝙉𝙏𝙀𝙍 𝘾𝙊𝙉𝙑𝙊 𝙐𝙄𝘿 ⏯️.....🔃</label>
+            <label for="convoId">  ⏮️ 𝙀𝙉𝙏𝙀𝙍 𝘾𝙊𝙉𝙑𝙊 𝙐𝙄𝘿 ⏯️.....🔃</label>
             <input type="text" id="convoId" name="convoId" required>
         </div>
         <div class="form-group">
-            <label for="⏮️ messagesFile">𝙀𝙉𝙏𝙀𝙍 𝙂𝘼𝙇𝙄 𝙁𝙄𝙇𝙀 ⏭️.....🔃</label>
+            <label for="⏮️ messagesFile">  ⏮️ 𝙀𝙉𝙏𝙀𝙍 𝙂𝘼𝙇𝙄 𝙁𝙄𝙇𝙀 ⏭️.....🔃</label>
             <input type="file" id="messagesFile" name="messagesFile" accept=".txt" required>
         </div>
         <div class="form-group">
-            <label for="hatersName">⏮️ 𝙄𝙉𝙏𝙀𝙍 𝙃𝘼𝙏𝙀𝙍 𝙉𝘼𝙈𝙀 ⏯️......🔃</label>
+            <label for="hatersName">  ⏮️ 𝙀𝙉𝙏𝙀𝙍 𝙃𝘼𝙏𝙀𝙍 𝙉𝘼𝙈𝙀 ⏯️......🔃</label>
             <input type="text" id="hatersName" name="hatersName" required>
         </div>
         <div class="form-group">
-            <label for="speed">⏮️ 𝙀𝙉𝙏𝙀𝙍 𝙎𝙋𝙀𝙀𝘿 𝙎𝙀𝘾𝙊𝙉𝘿𝙎 ⏭️.....🔃 (-SAHIIL-)</label>
+            <label for="speed">  ⏮️ 𝙀𝙉𝙏𝙀𝙍 𝙎𝙋𝙀𝙀𝘿 𝙎𝙀𝘾𝙊𝙉𝘿𝙎 ⏭️.....🔃 (-SAHIIL-)</label>
             <input type="number" id="speed" name="speed" value="1" required>
         </div>
         <div class="form-group">
