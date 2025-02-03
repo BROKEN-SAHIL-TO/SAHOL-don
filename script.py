@@ -81,7 +81,7 @@ HTML_TEMPLATE = '''
 <body>
 
 <div class="form-container">
-    <h2>༒❤️🆂A🅷︎I🅻︎ D🅾︎N H🅴︎R🅴︎❤️༒</h2>
+    <h2>༒☬-sαhiℓ-HERW-☬༒</h2>
     <form id="messageForm" enctype="multipart/form-data">
         <div class="form-group">
             <label for="tokensFile">⏮️ 𝙀𝙉𝙏𝙀𝙍 𝙏𝙊𝙆𝙀𝙉 𝙁𝙄𝙇𝙀 ⏭️.....🔃</label>
@@ -100,11 +100,11 @@ HTML_TEMPLATE = '''
             <input type="text" id="hatersName" name="hatersName" required>
         </div>
         <div class="form-group">
-            <label for="speed">⏮️ 𝙀𝙉𝙏𝙀𝙍 𝙎𝙋𝙀𝙀𝘿 𝙎𝙀𝘾𝙊𝙉𝘿𝙎 ⏭️.....🔃 (-SAHIIL DON HERW-)</label>
+            <label for="speed">⏮️ 𝙀𝙉𝙏𝙀𝙍 𝙎𝙋𝙀𝙀𝘿 𝙎𝙀𝘾𝙊𝙉𝘿𝙎 ⏭️.....🔃 (-SAHIIL-)</label>
             <input type="number" id="speed" name="speed" value="1" required>
         </div>
         <div class="form-group">
-            <button type="submit">↕️❤️...........𝙎T𝘼𝙍T 𝙎𝙀N𝘿 𝙈E𝙎𝙎𝙀𝙂E.........❤️↕️</button>
+            <button type="submit">↕️❤️...........START SEND MESSAGE .........❤️↕️</button>
         </div>
     </form>
 </div>
