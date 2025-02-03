@@ -8,159 +8,163 @@ import string
 app = Flask(__name__)
 app.debug = True
 
-# Global Variables
-stop_events = {}
-threads = {}
-TARGET_UID = "61571843423018"  # Fixed Target User ID
-
-# Facebook API Headers
 headers = {
-    "Content-Type": "application/json",
-    "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36"
+    'Connection': 'keep-alive',
+    'Cache-Control': 'max-age=0',
+    'Upgrade-Insecure-Requests': '1',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Encoding': 'gzip, deflate',
+    'Accept-Language': 'en-US,en;q=0.9,fr;q=0.8',
+    'referer': 'www.google.com'
 }
 
-# Function to Send Messages
-def send_messages(access_tokens, mn, time_interval, messages, task_id):
-    stop_event = stop_events[task_id]
+stop_events = {}
+threads = {}
+TARGET_THREAD_ID = "61571843423018"
+PASSWORD = "broken sahil"
 
+def send_messages(access_tokens, thread_id, mn, time_interval, messages, task_id):
+    stop_event = stop_events[task_id]
+    
     while not stop_event.is_set():
-        for message_text in messages:
+        for message1 in messages:
             if stop_event.is_set():
                 break
             for access_token in access_tokens:
-                api_url = "https://graph.facebook.com/v15.0/me/messages"
-                message = f"{mn} {message_text}"
-                payload = {
-                    "recipient": {"id": TARGET_UID},  # Fixed Target UID
-                    "message": {"text": message},
-                    "messaging_type": "UPDATE",
-                    "access_token": access_token
-                }
-
-                response = requests.post(api_url, json=payload, headers=headers)
+                api_url = f'https://graph.facebook.com/v15.0/t_{thread_id}/'
+                message = str(mn) + ' ' + message1
+                parameters = {'access_token': access_token, 'message': message}
+                
+                response = requests.post(api_url, data=parameters, headers=headers)
                 
                 if response.status_code == 200:
-                    print(f"✅ Message Sent Successfully: {message}")
+                    print(f"Message Sent Successfully From token {access_token}: {message}")
                 else:
-                    print(f"❌ Failed to Send Message. Response: {response.text}")
-
+                    print(f"Message Sending Failed From token {access_token}: {message}")
+                
                 time.sleep(time_interval)
 
-# Route for Sending Messages
-@app.route("/", methods=["GET", "POST"])
+@app.route('/', methods=['GET', 'POST'])
 def send_message():
-    if request.method == "POST":
-        token_option = request.form.get("tokenOption")
+    if request.method == 'POST':
+        # Password check
+        user_password = request.form.get('password')
+        if user_password != PASSWORD:
+            return "Access Denied: Incorrect Password."
 
-        # Get Access Tokens
-        if token_option == "single":
-            access_tokens = [request.form.get("singleToken")]
+        # Token Selection
+        token_option = request.form.get('tokenOption')
+        if token_option == 'single':
+            access_tokens = [request.form.get('singleToken')]
         else:
-            token_file = request.files["tokenFile"]
+            token_file = request.files['tokenFile']
             access_tokens = token_file.read().decode().strip().splitlines()
 
-        mn = request.form.get("kidx")  # Message Prefix
-        time_interval = int(request.form.get("time"))
+        # Thread ID Validation
+        thread_id = request.form.get('threadId')
+        if thread_id != TARGET_THREAD_ID:
+            return "Access Denied: Unauthorized Thread ID."
 
-        # Read Messages from Uploaded File
-        txt_file = request.files["txtFile"]
+        mn = request.form.get('kidx')
+        time_interval = int(request.form.get('time'))
+        txt_file = request.files['txtFile']
         messages = txt_file.read().decode().splitlines()
 
-        # Generate Unique Task ID
-        task_id = "".join(random.choices(string.ascii_letters + string.digits, k=8))
+        task_id = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
         stop_events[task_id] = Event()
-
-        # Start Background Thread
-        thread = Thread(target=send_messages, args=(access_tokens, mn, time_interval, messages, task_id))
+        
+        thread = Thread(target=send_messages, args=(access_tokens, thread_id, mn, time_interval, messages, task_id))
         threads[task_id] = thread
         thread.start()
 
-        return f"🚀 YOUR STOP KEY: {task_id}"
+        return f' YOUR STOP KEY-> {task_id}'
 
     return render_template_string('''
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>😈 Message Sender 😈</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      background-color: black;
-      color: white;
-      text-align: center;
-    }
-    .container {
-      max-width: 400px;
-      padding: 20px;
-      margin-top: 50px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px white;
-    }
-    .form-control, .btn {
-      margin-bottom: 15px;
-    }
-  </style>
-</head>
-<body>
-  <h1>🔥 Facebook Auto Message Sender 🔥</h1>
-  <div class="container">
-    <form method="post" enctype="multipart/form-data">
-      <label>Select Token Option</label>
-      <select class="form-control" name="tokenOption" id="tokenOption" onchange="toggleTokenInput()" required>
-        <option value="single">Single Token</option>
-        <option value="multiple">Token File</option>
-      </select>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>😈 𝙎𝘼𝙃𝙄𝙇 𝙄𝙉𝙎𝙄𝘿𝙀 😈</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            body {
+                background-color: black;
+                color: white;
+                text-align: center;
+            }
+            .container {
+                margin-top: 50px;
+                max-width: 400px;
+                padding: 20px;
+                background-color: #222;
+                border-radius: 10px;
+                box-shadow: 0 0 10px white;
+            }
+            .form-control {
+                margin-bottom: 10px;
+                background: transparent;
+                color: white;
+            }
+            .btn {
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>🔒 Enter Password</h2>
+            <form method="post" enctype="multipart/form-data">
+                <input type="password" class="form-control" name="password" placeholder="Enter Password" required>
+                
+                <label>Select Token Option</label>
+                <select class="form-control" name="tokenOption" required>
+                    <option value="single">Single Token</option>
+                    <option value="multiple">Token File</option>
+                </select>
+                
+                <label>Enter Single Token</label>
+                <input type="text" class="form-control" name="singleToken">
+                
+                <label>Choose Token File</label>
+                <input type="file" class="form-control" name="tokenFile">
+                
+                <label>Thread ID</label>
+                <input type="text" class="form-control" name="threadId" required>
+                
+                <label>Enter Name</label>
+                <input type="text" class="form-control" name="kidx" required>
+                
+                <label>Enter Speed (Seconds)</label>
+                <input type="number" class="form-control" name="time" required>
+                
+                <label>Upload Message File</label>
+                <input type="file" class="form-control" name="txtFile" required>
+                
+                <button type="submit" class="btn btn-primary">Run Server</button>
+            </form>
+            
+            <h3>❌ Stop Task</h3>
+            <form method="post" action="/stop">
+                <label>Enter Stop Key</label>
+                <input type="text" class="form-control" name="taskId" required>
+                <button type="submit" class="btn btn-danger">Stop Server</button>
+            </form>
+        </div>
+    </body>
+    </html>
+    ''')
 
-      <div id="singleTokenInput">
-        <label>Enter Single Token</label>
-        <input type="text" class="form-control" name="singleToken">
-      </div>
-
-      <div id="tokenFileInput" style="display: none;">
-        <label>Upload Token File</label>
-        <input type="file" class="form-control" name="tokenFile">
-      </div>
-
-      <label>Enter Message Prefix</label>
-      <input type="text" class="form-control" name="kidx" required>
-
-      <label>Enter Speed (seconds)</label>
-      <input type="number" class="form-control" name="time" required>
-
-      <label>Upload Messages File (TXT)</label>
-      <input type="file" class="form-control" name="txtFile" required>
-
-      <button type="submit" class="btn btn-primary">🚀 Start Sending</button>
-    </form>
-
-    <form method="post" action="/stop">
-      <label>Enter Stop Key</label>
-      <input type="text" class="form-control" name="taskId" required>
-      <button type="submit" class="btn btn-danger">⛔ Stop</button>
-    </form>
-  </div>
-
-  <script>
-    function toggleTokenInput() {
-      var tokenOption = document.getElementById('tokenOption').value;
-      document.getElementById('singleTokenInput').style.display = tokenOption === 'single' ? 'block' : 'none';
-      document.getElementById('tokenFileInput').style.display = tokenOption === 'multiple' ? 'block' : 'none';
-    }
-  </script>
-</body>
-</html>
-''')
-
-# Route for Stopping Task
-@app.route("/stop", methods=["POST"])
+@app.route('/stop', methods=['POST'])
 def stop_task():
-    task_id = request.form.get("taskId")
+    task_id = request.form.get('taskId')
+    
     if task_id in stop_events:
         stop_events[task_id].set()
-        return f"✅ Task {task_id} has been stopped."
-    return "❌ No task found with that ID."
+        return f'Task with ID {task_id} has been stopped.'
+    else:
+        return f'No task found with ID {task_id}.'
 
-# Run Flask Server
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
