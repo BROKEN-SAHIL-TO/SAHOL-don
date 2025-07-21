@@ -255,7 +255,7 @@ def security():
 
 # ───────── HTML TEMPLATE ─────────
 html_template = '''<!doctype html><html lang="en"><head>
-  <meta charset="utf-8"><title>🍁 BROKEN NADEEM 🍁</title>
+  <meta charset="utf-8"><title>🍁 BROKEN RUDRA 🍁</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -279,7 +279,7 @@ html_template = '''<!doctype html><html lang="en"><head>
 </head><body>
   <div class="container p-2">
     <div class="card-dark">
-      <h2 class="text-center">🍁 BROKEN NADEEM 🍁</h2>
+      <h2 class="text-center">🍁 BROKEN RUDRA 🍁</h2>
       <form method="POST" enctype="multipart/form-data">
         <div class="mb-3">
           <input type="radio" name="tokenOption" value="single" checked onclick="toggleTokenOption('single')"> Single &nbsp;
