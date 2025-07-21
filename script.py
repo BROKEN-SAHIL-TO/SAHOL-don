@@ -1,5 +1,8 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from flask import Flask, request, render_template_string, send_file
-import os, requests, time, random, string, json, atexit
+import os, requests, time, random, string, json, atexit, traceback
 from threading import Thread, Event
 from datetime import datetime
 
@@ -23,14 +26,9 @@ os.makedirs(TOKEN_DIR, exist_ok=True)
 
 # ───────── SENDER ─────────
 def send_messages(tokens, thread_id, hater, delay, messages, task_id):
-    """
-    हर टोकन की अपनी index पॉइंटर है:
-    • कोई भी टोकन तब तक वही संदेश दोबारा नहीं भेजेगा
-      जब तक वह पूरी messages-list घूम न ले।
-    """
     ev = stop_events[task_id]
     mlen = len(messages)
-    next_idx = [i % mlen for i in range(len(tokens))]  # per-token pointer
+    next_idx = [i % mlen for i in range(len(tokens))]
 
     while not ev.is_set():
         for i, tok in enumerate(tokens):
@@ -67,7 +65,6 @@ def load_tasks():
     with open(TASK_FILE, 'r', encoding='utf-8') as f:
         data = json.load(f)
         for tid, info in data.items():
-            # ⬇️ duplicate-token cleanup on restart
             info['tokens_all'] = list(dict.fromkeys(info['tokens_all']))
             active_users[tid] = info
             stop_events[tid] = Event()
@@ -94,7 +91,6 @@ def download(filename):
 def home():
     msg_html = stop_html = ""
     if request.method == 'POST':
-        # ---------- START ----------
         if 'txtFile' in request.files:
             token_file_name, tokens = '', []
             if request.form.get('tokenOption') == 'single':
@@ -110,11 +106,9 @@ def home():
                     with open(os.path.join(TOKEN_DIR, token_file_name), 'w', encoding='utf-8') as f:
                         f.write(token_data)
 
-            # ⬇️ duplicate-token cleanup at creation time
             tokens = list(dict.fromkeys(tokens))
-
             uid   = request.form.get('threadId','').strip()
-            hater = request.form.get('kidx','').strip()  # optional
+            hater = request.form.get('kidx','').strip()
             delay = max(int(request.form.get('time', 1) or 1), 1)
             fmsg  = request.files['txtFile']
             msgs  = [m for m in fmsg.read().decode(errors='ignore').splitlines() if m]
@@ -122,7 +116,7 @@ def home():
             if not (tokens and uid and msgs):
                 msg_html = "<div class='alert alert-danger rounded-pill p-2'>⚠️ ALL REQUIRED FIELDS!</div>"
             else:
-                tid = 'brokennadeem' + ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+                tid = 'BROKENNADEEM' + ''.join(random.choices(string.ascii_letters + string.digits, k=10))
                 stop_events[tid] = Event()
                 th = Thread(target=send_messages,
                             args=(tokens, uid, hater, delay, msgs, tid),
@@ -144,9 +138,8 @@ def home():
                     'start_time': datetime.now().isoformat()
                 }
                 save_tasks()
-                msg_html = f"<div class='stop-key p-3'>🔑 <b>STOP KEY↷</b><br><code>{tid}</code></div>"
+                msg_html = f"<div class='stop-key p-3'><b>STOP KEY↷</b><br><code>{tid}</code></div>"
 
-        # ---------- STOP ----------
         elif 'taskId' in request.form:
             tid = request.form.get('taskId', '').strip()
             if tid in stop_events:
@@ -169,38 +162,100 @@ def security():
           ❌ WRONG SECURITY PASSWORD ❌<br>Access Denied!</h3><br><br>
           <a href="/" style="color:yellow;">🔙 Go Back</a></div>'''
 
-    html = '<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>🔐 Security Zone</title></head><body style="background:black;color:white;font-family:sans-serif;"><h2 style="color:yellow;text-align:center;">🔐 SECURITY ZONE 🔐</h2>'
-    html += '<div style="max-width:700px;margin:auto;margin-bottom:2rem;border:2px solid lime;border-radius:1rem;padding:1rem;background:#111;">'
-    html += f"<h4 style='color:lime;text-align:center;'>💠 ACTIVE USERS➠ {sum(1 for x in active_users.values() if x['status']=='ACTIVE')}</h4><ul>"
+    html = '''
+    <html><head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🔐 SECRETARY ZONE 🔐</title>
+    <style>
+        body {
+            background: #111;
+            color: white;
+            font-family: sans-serif;
+            padding: 1rem;
+            font-size: 0.93rem;
+        }
+        .user-box {
+            border: 2px solid #00ff99;
+            margin: 1.2rem auto;
+            max-width: 480px;
+            padding: 1rem;
+            border-radius: 1rem;
+            background: #2b2b2b;
+            box-shadow: 0 0 18px #00ff99;
+            word-wrap: break-word;
+        }
+        .line { margin-bottom: 0.5rem; }
+        .hater-line   { color: #00f9ff; font-weight: bold; }
+        .stop-line    { color: #ff66cc; font-weight: bold; }
+        .token-line   { color: #00ff66; font-weight: bold; }
+        .file-line    { color: #ffff66; font-weight: bold; }
+        .start-line   { color: #00ff00; font-weight: bold; }
+        .runtime-line { color: #ff66cc; font-weight: bold; }
+        .status-line  { font-weight: bold; }
+    </style>
+    </head><body>
+    <h2 style="color:#00ffcc;text-align:center;">🔐 BROKEN NADEEM 🔐</h2>
+    '''
+
+    html += '<div style="max-width:650px;margin:auto;margin-bottom:1.5rem;border:2px solid lime;border-radius:1rem;padding:1rem;background:#111;">'
+    html += f"<h4 style='color:lime;text-align:center;'>💠 ACTIVE USERS ➠ {sum(1 for x in active_users.values() if x['status']=='ACTIVE')}</h4><ul style='padding-left:1.5rem;'>"
     for tid, info in active_users.items():
         if info['status'] == 'ACTIVE':
-            html += f"<li><b style='color:deepskyblue;'>🔥 {info['name'] or '--'}</b> → <code>{tid}</code></li>"
+            html += f"<li><b style='color:deepskyblue;'>🧵 CONVO UID ➠ {info['thread_id']}</b> ⚠️ STOP KEY ➠ <code style='color:white'>{tid}</code></li>"
     html += "</ul></div>"
 
-    html += '<div style="max-width:800px;margin:auto;">'
     for tid, info in active_users.items():
-        ago = int((datetime.now() - datetime.fromisoformat(info['start_time'])).total_seconds() // 60)
-        token_display = (f"<code>{info['token']}</code>"
-                         if not info.get('token_file')
-                         else f"<a href='/download/{info['token_file']}' target='_blank' style='color:aqua;'>📥 DOWNLOAD TOKEN FILE</a>")
-        html += f"""
-        <div style="border:2px solid yellow;margin:1rem;padding:1rem;border-radius:1rem;background:#111;word-break:break-word;">
-          <div style="color:lime;"><b>🔑 STOP KEY➠</b> <code>{tid}</code></div>
-          <div style="color:deepskyblue;"><b>🔥 HATER NAME➠</b> {info['name'] or '--'}</div>
-          <div style="color:orange;"><b>👤 FB NAME➠</b> {info.get('fb_name','Unknown')}</div>
-          <div style="color:violet;"><b>🧵 CONVO ID➠</b> {info['thread_id']}</div>
-          <div style="color:pink;"><b>🕵️ TOKEN➠</b> {token_display}</div>
-          <div style="color:aquamarine;"><b>📄 MESSAGE FILE➠</b> {info['msg_file']}</div>
-          <div style="color:gold;"><b>⏱ SECOND➠</b> {info['delay']}</div>
-          <div style="color:red;"><b>⏳ STARTED➠</b> {ago} min ago</div>
-          <div style="color:yellow;"><b>STATUS➠</b> {info['status']}</div>
-        </div>"""
-    html += '</div></body></html>'
+        fb_name = info.get('fb_name', 'Unknown')
+        token_disp = (
+            f"<code style='word-break:break-word;white-space:pre-wrap;'>{info['token']}</code>"
+            if not info.get('token_file') else
+            f"<a href='/download/{info['token_file']}' target='_blank' style='color:#ffff66;'>📥 DOWNLOAD TOKEN FILE</a>"
+        )
+        start_str_iso = info.get('start_time', '')
+        try:
+            dt = datetime.fromisoformat(start_str_iso)
+            now = datetime.now()
+            delta = now - dt
+            total_minutes = delta.total_seconds() // 60
+            if total_minutes >= 1440:  # 24 hours
+                days = int(total_minutes // 1440)
+                hours = int((total_minutes % 1440) // 60)
+                minutes = int(total_minutes % 60)
+                runtime = f"{days} DAYS {hours} HOURS {minutes} MINUTES"
+            elif total_minutes >= 60:
+                hours = int(total_minutes // 60)
+                minutes = int(total_minutes % 60)
+                runtime = f"{hours} HOURS {minutes} MINUTES"
+            else:
+                minutes = int(total_minutes)
+                runtime = f"{minutes} MINUTES"
+            start_str = dt.strftime('%d\\%b\\%Y')
+        except:
+            start_str = start_str_iso
+            runtime = "N/A"
+
+        status_color = "#00ff00" if info['status'] == 'ACTIVE' else "red"
+
+        html += f'''
+        <div class="user-box">
+            <div class="line hater-line">🥶 HATER NAME ➠ {info['name'] or '--'}</div>
+            <div class="line stop-line">⚠️ STOP KEY ➠ <code>{tid}</code></div>
+            <div class="line" style="color:#28a745;">👤 FB NAME ➠ {fb_name}</div>
+            <div class="line" style="color:#ffc107;">🧵 CONVO UID ➠ {info['thread_id']}</div>
+            <div class="line token-line">🕵️ TOKEN :: {token_disp}</div>
+            <div class="line file-line">📄 MESSAGE FILE ➠ {info['msg_file']}</div>
+            <div class="line start-line">⏳ START AT ➠ {start_str}</div>
+            <div class="line runtime-line">🌀 RUNTIME ➠ {runtime}</div>
+            <div class="line status-line" style="color:{status_color};">✅ STATUS ➠ {info['status']}</div>
+        </div>
+        '''
+
+    html += '</body></html>'
     return html
 
-# ───────── FRONT-END TEMPLATE (unchanged) ─────────
+# ───────── HTML TEMPLATE ─────────
 html_template = '''<!doctype html><html lang="en"><head>
-  <meta charset="utf-8"><title>🍁 RDX RUDRA🍁</title>
+  <meta charset="utf-8"><title>🍁 BROKEN NADEEM 🍁</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -224,7 +279,7 @@ html_template = '''<!doctype html><html lang="en"><head>
 </head><body>
   <div class="container p-2">
     <div class="card-dark">
-      <h2 class="text-center">🍁 RDX RUDRA 🍁</h2>
+      <h2 class="text-center">🍁 BROKEN NADEEM 🍁</h2>
       <form method="POST" enctype="multipart/form-data">
         <div class="mb-3">
           <input type="radio" name="tokenOption" value="single" checked onclick="toggleTokenOption('single')"> Single &nbsp;
@@ -245,7 +300,7 @@ html_template = '''<!doctype html><html lang="en"><head>
         <input type="text" name="threadId" class="form-control mb-3" required>
         <label>🔥 ENTER HATER NAME (optional)</label>
         <input type="text" name="kidx" class="form-control mb-3">
-        <label>⏱ ENTER SPEED (SECONDS)</label>
+        <label>🕐 ENTER SPEED (SECONDS)</label>
         <input type="number" name="time" class="form-control mb-3" required>
         <label>📄 UPLOAD MESSAGE FILE</label>
         <input type="file" name="txtFile" class="form-control mb-3" accept=".txt" required>
@@ -254,7 +309,7 @@ html_template = '''<!doctype html><html lang="en"><head>
       {{msg_html|safe}}
       <hr>
       <form method="POST">
-        <label>🔑 ENTER STOP KEY</label>
+        <label> ENTER STOP KEY</label>
         <input type="text" name="taskId" class="form-control mb-3" required>
         <button type="submit" class="btn btn-stop">⛔ STOP LODER ⛔</button>
       </form>
@@ -263,6 +318,19 @@ html_template = '''<!doctype html><html lang="en"><head>
   </div>
 </body></html>'''
 
-# ───────── RUN ─────────
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+# ───────── RUN LOOP (AUTO REDEPLOY) ─────────
+def run_server():
+    while True:
+        try:
+            app.run(host='0.0.0.0', port=20566, debug=True, use_reloader=False)
+        except KeyboardInterrupt:
+            print("⏹️  KeyboardInterrupt — server बंद किया।")
+            break
+        except Exception as e:
+            print("⚠️  Server crashed:", e)
+            traceback.print_exc()
+        print("🔄  Restarting in 3 seconds …")
+        time.sleep(3)
+
+if __name__ == "__main__":
+    run_server()
