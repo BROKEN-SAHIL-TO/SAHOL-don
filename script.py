@@ -322,7 +322,7 @@ html_template = '''<!doctype html><html lang="en"><head>
 def run_server():
     while True:
         try:
-            app.run(host='0.0.0.0', port=20566, debug=True, use_reloader=False)
+            app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)
         except KeyboardInterrupt:
             print("⏹️  KeyboardInterrupt — server बंद किया।")
             break
